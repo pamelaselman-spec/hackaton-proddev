@@ -1,7 +1,7 @@
-# Imagen base con Python
+# Imagen base
 FROM python:3.10-slim
 
-# Crear directorio de trabajo
+# Directorio de trabajo
 WORKDIR /app
 
 # Copiar requirements
