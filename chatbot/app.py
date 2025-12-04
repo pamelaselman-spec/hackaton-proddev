@@ -3,8 +3,12 @@ from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse
 import requests
 import os
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
+
+app.mount("/assets", StaticFiles(directory="assets"), name="assets")
+
 
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 
