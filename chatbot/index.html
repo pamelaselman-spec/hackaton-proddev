@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Book Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f0f2f5;
+    }
+    #chatbox {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px;
+      width: 600px;
+      height: 400px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+    .message {
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 12px;
+      max-width: 80%;
+      white-space: pre-line; /* respeta saltos de línea */
+    }
+    .user {
+      background-color: #d1e7dd; /* verde suave */
+      align-self: flex-end;
+      text-align: right;
+    }
+    .bot {
+      background-color: #e7f1ff; /* azul suave */
+      align-self: flex-start;
+      text-align: left;
+    }
+    #inputArea {
+      display: flex;
+      gap: 10px;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>BookBOT 📚</h1>
+  <div id="chatbox"></div>
+  <div id="inputArea">
+    <input type="text" id="userInput" placeholder="Type your message here..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const message = document.getElementById("userInput").value;
+      if (!message) return;
+
+      const chatbox = document.getElementById("chatbox");
+
+      // Mensaje del usuario
+      const userMsg = document.createElement("div");
+      userMsg.className = "message user";
+      userMsg.textContent = "You: " + message;
+      chatbox.appendChild(userMsg);
+
+      // Enviar al backend
+      const res = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      });
+      const data = await res.json();
+
+      // Mensaje del bot
+      const botMsg = document.createElement("div");
+      botMsg.className = "message bot";
+      botMsg.textContent = "Bot: " + data.reply + "\n\n" + data.context;
+      chatbox.appendChild(botMsg);
+
+      // Scroll automático al final
+      chatbox.scrollTop = chatbox.scrollHeight;
+
+      // Limpiar input
+      document.getElementById("userInput").value = "";
+    }
+  </script>
+</body>
+</html>
